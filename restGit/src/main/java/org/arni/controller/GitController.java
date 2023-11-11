@@ -1,9 +1,7 @@
 package org.arni.controller;
 
-import org.arni.jpa.LoginCountRepository;
 import org.arni.model.ErrorMessage;
 import org.arni.model.GitUser;
-import org.arni.model.LoginCount;
 import org.arni.service.CollectGitUserService;
 import org.arni.service.ICalculationService;
 import org.owasp.esapi.ESAPI;
