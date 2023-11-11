@@ -2,6 +2,7 @@ package org.arni.controller;
 
 import org.arni.model.ErrorMessage;
 import org.arni.model.GitUser;
+import org.arni.model.GitUserDTO;
 import org.arni.service.CollectGitUserService;
 import org.arni.service.ICalculationService;
 import org.owasp.esapi.ESAPI;
@@ -47,7 +48,7 @@ public class GitController {
             GitUser gitUser = user.get();
             collectGitUserService.storeCountedQueryAmount(gitUser);
             gitUser.setCalculations(calculationService.calculateWeight(gitUser));
-            return new ResponseEntity<>(gitUser, HttpStatus.OK);
+            return new ResponseEntity<>(GitUserDTO.buildFromGitUser(gitUser), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(ErrorMessage.builder().errorMessage("Not found").build(), HttpStatus.NOT_FOUND);
         }
