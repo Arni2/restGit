@@ -9,7 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 public class GitUserDTO {
     @JsonProperty
-    private long id;
+    private String id;
     @JsonProperty
     private String login;
     @JsonProperty
@@ -25,7 +25,7 @@ public class GitUserDTO {
 
     public static GitUserDTO buildFromGitUser(GitUser user) {
         return GitUserDTO.builder()
-                .id(user.getId())
+                .id(String.valueOf(user.getId()))
                 .login(user.getLogin())
                 .name(user.getName())
                 .type(user.getType())
