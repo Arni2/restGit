@@ -6,9 +6,11 @@ import org.arni.model.LoginCount;
 import org.hibernate.StaleObjectStateException;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.CannotAcquireLockException;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
@@ -23,13 +25,14 @@ public class CollectGitUserService {
         this.loginCountRepository = loginCountRepository;
     }
 
-    @Retryable(retryFor = {StaleObjectStateException.class, ConstraintViolationException.class},
+    @Retryable(retryFor = {StaleObjectStateException.class, ConstraintViolationException.class, CannotAcquireLockException.class},
             backoff = @Backoff(delay = 50, maxDelay = 300),
             maxAttempts = 100)
-    @Transactional(rollbackFor = {StaleObjectStateException.class, ConstraintViolationException.class})
+    @Transactional(rollbackFor = {StaleObjectStateException.class, ConstraintViolationException.class, CannotAcquireLockException.class},
+                   isolation = Isolation.SERIALIZABLE)
     public long storeCountedQueryAmount(GitUser user) {
 
-        //System.out.println(TransactionSynchronizationManager.isActualTransactionActive());
+        //System.out.println(TransactionSynchronizationManager.getCurrentTransactionIsolationLevel());
 
         Optional<LoginCount> loginCountEntity = loginCountRepository.findById(user.getId());
 
